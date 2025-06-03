@@ -203,7 +203,7 @@ function CreateFigure
     s_clim  = prctile(s_var,  [1 99]);
     o2_clim = prctile(o2_var, [1 99]);
     ph_clim = prctile(ph_var, [1 99]);
-    chl_clim = prctile(chl_var, [5 100]); % Removing the focus from the low data in the clim.
+    chl_clim = prctile(chl_var, [5 99]); % Removing the focus from the low data in the clim.
     
     % Create figure and tiled layout
     fig = figure('Units','normalized','Position',[0 0 1 1],'Visible','off'); % full screen
