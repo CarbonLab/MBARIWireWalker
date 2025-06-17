@@ -1,4 +1,6 @@
 function WriteODV(filename)
+% Takes WireWalker data and writes a 1 Hz csv file
+% Ben Werb | Bwerb@mbari.org | 6/17/2025
     folder = '\\atlas.shore.mbari.org\ProjectLibrary\901805_Coastal_Biogeochemical_Sensing\WireWalker\MBARI\data';
     fname = fullfile(folder,filename);
     WWload = readtable(fname); % read full upcast data
@@ -26,6 +28,11 @@ function WriteODV(filename)
     WWload.N2 = [NaN; N2];
     WWload.p_mid = [NaN; p_mid];
 
+    % Calculate %O2Sat
+    WWload.o2satper = WWload.DissolvedO2 ./...
+        calcO2sat(WWload.Temperature, WWload.Salinity) .* 100; % Saturation %
+    
+    % Assemble data in a table
     T = table(Cruise,WWload.Station,Type,dateStr,timeStr,...
         WWload.Longitude,WWload.Latitude,'VariableNames',...
         {'Cruise','Station','Type','mm/dd/yyyy','HH:MM:SS',...
@@ -34,6 +41,8 @@ function WriteODV(filename)
     WWload.Station = [];
     WWload.Latitude = [];
     WWload.Longitude = [];
+
+    % Create final table to save
     WW = [T WWload]; % final table
     savefilename = fullfile(folder,'WW_Upcast_1Hz.txt');
     writetable(WW,savefilename);
